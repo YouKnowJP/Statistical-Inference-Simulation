@@ -1,0 +1,95 @@
+---
+title: "Statistical Inference, Data Analysis Part 2"
+author: "Jackson Pham"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r, echo = TRUE}
+
+# Load necessary libraries
+library(datasets)
+library(psych)
+
+```
+
+```{r, echo = TRUE}
+
+# Load ToothGrowth dataset
+data <- datasets::ToothGrowth
+
+# Summarize statistic
+summary(data)
+
+# Describe the data
+describe(data)
+
+```
+
+```{r, echo = TRUE}
+
+# Visualize the data
+boxplot(len ~ dose * supp, data = ToothGrowth, xlab = "Dose", ylab = "Tooth Length", main = "Tooth Growth by Dose and Supplement")
+
+# Calculate t.test between OJ and VC
+t_test_result <- t.test(len ~ supp, data = data)
+print(t_test_result)
+
+# Subset the data for 'VC' group
+vc_data <- subset(data, supp == "VC")
+# Subset the data for 'OJ' group
+oj_data1 <- subset(data, supp == "OJ")
+
+# Subset the data further for VC dose levels 0.5 and 1.0
+vc_dose_0.5 <- subset(vc_data, dose == 0.5)$len
+vc_dose_1.0 <- subset(vc_data, dose == 1.0)$len
+vc_dose_2.0 <- subset(vc_data, dose == 2.0)$len
+
+# Subset the data further for dose levels 0.5 and 1.0
+oj_dose_0.5 <- subset(oj_data1, dose == 0.5)$len
+oj_dose_1.0 <- subset(oj_data1, dose == 1.0)$len
+oj_dose_2.0 <- subset(oj_data1, dose == 2.0)$len
+
+# Perform the t-test VC
+t_test_result1 <- t.test(vc_dose_0.5, vc_dose_1.0)
+t_test_result2 <- t.test(vc_dose_0.5, vc_dose_2.0)
+t_test_result3 <- t.test(vc_dose_1.0, vc_dose_2.0)
+
+# Perfome the t-test OJ
+t_test_result4 <- t.test(oj_dose_0.5, oj_dose_1.0)
+t_test_result5 <- t.test(oj_dose_0.5, oj_dose_2.0)
+t_test_result6 <- t.test(oj_dose_1.0, oj_dose_2.0)
+
+
+#print test result
+print(t_test_result1)
+print(t_test_result2)
+print(t_test_result3)
+print(t_test_result4)
+print(t_test_result5)
+print(t_test_result6)
+
+```
+
+**OJ vs VC**
+Based on the calculated p-value of approximately 0.06063 (assuming a significance level of 0.05), we fail to reject the null hypothesis. This indicates that there isn't enough evidence to suggest a significant difference between the lengths of the two groups ("OJ" and "VC"). Therefore, we do not have sufficient statistical evidence to conclude that the supplement type significantly affects the lengths.
+
+**VC 0.5 vs 1.0**
+Based on the calculated p-value of approximately 6.811e-07 (which is significantly less than the significance level of 0.05), we reject the null hypothesis. This suggests that there is enough evidence to indicate a significant difference between the lengths of the two dose levels (0.5 and 1.0) within the "VC" group. Therefore, we do have sufficient statistical evidence to conclude that the supplement type significantly affects the lengths at different dose levels.
+
+**VC 0.5 vs 2.0**
+Based on the calculated p-value of approximately 4.682e-08 (which is significantly less than the significance level of 0.05), we reject the null hypothesis. This suggests that there is enough evidence to indicate a significant difference between the lengths of the two dose levels (0.5 and 2.0) within the "VC" group. Therefore, we do have sufficient statistical evidence to conclude that the supplement type significantly affects the lengths at different dose levels.
+
+**VC 1.0 vs 2.0**
+Based on the calculated p-value of approximately 9.156e-05 (which is significantly less than the significance level of 0.05), we reject the null hypothesis. This suggests that there is enough evidence to indicate a significant difference between the lengths of the two dose levels (2.0 and 1.0) within the "VC" group. Therefore, we do have sufficient statistical evidence to conclude that the supplement type significantly affects the lengths at different dose levels.
+
+**OJ 0.5 vs 1.0**
+Based on the calculated p-value of approximately 8.785e-05 (which is significantly less than the significance level of 0.05), we reject the null hypothesis. This suggests that there is enough evidence to indicate a significant difference between the lengths of the two dose levels (0.5, 1.0) within the "OJ" group. Therefore, we do have sufficient statistical evidence to conclude that the supplement type significantly affects the lengths at different dose levels.
+
+**OJ 0.5 vs 2.0**
+Based on the calculated p-value of approximately 1.324e-06 (which is significantly less than the significance level of 0.05), we reject the null hypothesis. This suggests that there is enough evidence to indicate a significant difference between the lengths of the two dose levels (0.5, 2.0) within the "OJ" group. Therefore, we do have sufficient statistical evidence to conclude that the supplement type significantly affects the lengths at different dose levels.
+
+**OJ 1.0 vs 2.0**
+
+Based on the calculated p-value of approximately 0.0392 (which is significantly less than the significance level of 0.05), we reject the null hypothesis. This suggests that there is enough evidence to indicate a significant difference between the lengths of the two dose levels (1.0, 2.0) within the "OJ" group. Therefore, we do have sufficient statistical evidence to conclude that the supplement type significantly affects the lengths at different dose levels.
+
