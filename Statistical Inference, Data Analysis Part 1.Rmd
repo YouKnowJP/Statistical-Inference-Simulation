@@ -1,0 +1,113 @@
+---
+title: "Statistical Inference, Data Analysis Part 1"
+author: "Jackson Pham"
+date: "`r Sys.Date()`"
+output: html_document
+---
+**Title**: Investigating the Exponential Distribution and the Central Limit Theorem in R
+
+**Overview:**
+
+In this report, we explore the properties of the exponential distribution and compare it with the Central Limit Theorem using simulations in R. Specifically, we investigate the distribution of averages of 40 exponentials and compare it with the theoretical expectations. We also demonstrate how the distribution converges to a normal distribution as per the Central Limit Theorem.
+
+**Simulations:**
+
+We utilized R to simulate the exponential distribution and compute the mean and variance of samples. Below is the R code used for the simulations:
+
+```{r, echo = TRUE}
+
+# Load necessary libraries
+library(ggplot2)
+
+# Define constants
+lambda <- 0.2
+num_simulations <- 1000
+sample_size <- 40
+
+```
+
+```{r, echo = TRUE}
+
+# Step 2: Simulate exponential distribution and calculate statistics
+# Function to perform simulations and calculate statistics
+perform_simulation <- function() {
+  sample_means <- replicate(num_simulations, mean(rexp(sample_size, lambda)))
+  return(sample_means)
+}
+
+# Perform simulations
+sample_means <- perform_simulation()
+
+# Calculate sample statistics
+sample_mean <- mean(sample_means)
+sample_variance <- var(sample_means)
+theoretical_mean <- 1 / lambda
+theoretical_variance <- (1 / lambda^2) / sample_size
+
+```
+
+```{r, echo = TRUE}
+
+# Step 3: Compare sample statistics with theoretical values
+print(paste("Sample Mean:", sample_mean))
+print(paste("Theoretical Mean:", theoretical_mean))
+print(paste("Sample Variance:", sample_variance))
+print(paste("Theoretical Variance:", theoretical_variance))
+
+```
+
+**Sample Mean versus Theoretical Mean:**
+
+We compared the sample mean obtained from simulations with the theoretical mean of the distribution. The following figure illustrates this comparison:
+
+After calculating and comparing the theoretical mean with the sample mean, we find that there is negligible difference in accuracy between the two data points.
+
+From the figure, we observe that the sample mean closely aligns with the theoretical mean of the distribution. The values obtained were as follows:
+
+Sample Mean: 5.00077339078556
+Theoretical Mean: 5
+
+**Sample Variance versus Theoretical Variance:**
+
+Similarly, we compared the sample variance with the theoretical variance of the distribution. The figure below showcases this comparison:
+
+After contrasting the sample variance with the theoretical variance, we can assert that the discrepancy between the two data points is minimal, with only a difference of 0.01 observed between the two values.
+
+Based on the figure, we can see that the sample variance approximates the theoretical variance reasonably well. The values obtained were as follows:
+
+Sample Variance: 0.634281882763278
+Theoretical Variance: 0.625
+
+```{r, echo = TRUE}
+
+# Step 4: Visualize distribution of sample means
+# Create a histogram
+ggplot(data = data.frame(x = sample_means), aes(x)) +
+  geom_histogram(bins = 30, fill = "skyblue", color = "black", alpha = 0.7) +
+  geom_vline(xintercept = theoretical_mean, color = "red", linetype = "dashed", size = 1) +
+  ggtitle("Distribution of Sample Means") +
+  xlab("Sample Mean") +
+  ylab("Frequency") +
+  theme_minimal()
+
+# Overlay a normal distribution
+x <- seq(min(sample_means), max(sample_means), length.out = 1000)
+y <- dnorm(x, mean = theoretical_mean, sd = sqrt(theoretical_variance))
+data <- data.frame(x, y)
+ggplot(data, aes(x, y)) +
+  geom_line(color = "blue") +
+  geom_vline(xintercept = theoretical_mean, color = "red", linetype = "dashed", size = 1) +
+  ggtitle("Normal Distribution Overlay") +
+  xlab("Sample Mean") +
+  ylab("Density") +
+  theme_minimal()
+
+```
+
+**Distribution:**
+
+To demonstrate that the distribution of the mean of 40 exponentials approximates a normal distribution, we plotted a histogram of the sample means. Here's the figure:
+
+Distribution sample mean: 5
+
+The histogram illustrates that the distribution of the sample means exhibits characteristics of a normal distribution. This observation aligns with the Central Limit Theorem, which states that the distribution of sample means approaches a normal distribution as the sample size increases.
